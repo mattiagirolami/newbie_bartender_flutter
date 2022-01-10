@@ -84,6 +84,7 @@ class _VisualizzaRicettaState extends State<VisualizzaRicetta> {
       return (somma / counter);
     }
   }
+  
 
   checkRatings() {
     int counter = 0;
