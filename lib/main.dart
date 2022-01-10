@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:newbie_bartender/utils/colors.dart';
 import 'package:newbie_bartender/login.dart';
 import 'package:newbie_bartender/navigation.dart';
 
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Newbie Bartender',
       theme: ThemeData(
-        primarySwatch: Colors.orange,
+        primarySwatch: ColorsPersonal.buildMaterialColor(Color(0xFFFA7E0A)),
       ),
       debugShowCheckedModeBanner: false,
       home: StartScreen(),
@@ -41,13 +42,12 @@ class _StartScreenState extends State<StartScreen> {
   void initState() {
     super.initState();
     Timer(const Duration(milliseconds: 2500), () {
-
       if (FirebaseAuth.instance.currentUser != null) {
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => Navigation()));
       } else {
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => Login()));
+        Navigator.of(context)
+            .pushReplacement(MaterialPageRoute(builder: (context) => Login()));
       }
     });
   }
@@ -55,7 +55,7 @@ class _StartScreenState extends State<StartScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.orange,
+      backgroundColor: ColorsPersonal.arancione_bello,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

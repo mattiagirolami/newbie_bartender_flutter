@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:newbie_bartender/utils/colors.dart';
 import 'package:newbie_bartender/login.dart';
 
 class Register extends StatefulWidget {
@@ -24,7 +25,7 @@ class _RegisterState extends State<Register> {
     User? user;
     RegExp regexpEmail = RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]");
 
-    Map<String, dynamic> newUser = {};
+    Map<String, dynamic> newUser = HashMap();
 
     try {
       UserCredential userCredential = await auth.createUserWithEmailAndPassword(
@@ -33,6 +34,7 @@ class _RegisterState extends State<Register> {
     } on FirebaseException catch (e) {
       if (e.code == "email-already-in-use") {
         Fluttertoast.showToast(msg: "Esiste già un utente con questa email");
+        return null;
       }
     }
     if (username.isEmpty) {
@@ -67,12 +69,14 @@ class _RegisterState extends State<Register> {
       Fluttertoast.showToast(msg: "Le password non coincidono");
       return null;
     }
-
-    Fluttertoast.showToast(msg: "Nuovo utente registrato");
-
     newUser["username"] = username;
 
-    FirebaseFirestore.instance.collection("users").doc(email).set(newUser);
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(email)
+        .set(newUser);
+
+    Fluttertoast.showToast(msg: "Nuovo utente registrato");
 
     return user;
   }
@@ -92,16 +96,10 @@ class _RegisterState extends State<Register> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("My App Title",
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold)),
-              Text("Login to your App",
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 44,
-                      fontWeight: FontWeight.bold)),
+              SizedBox(
+                height: 20,
+              ),
+              Image.asset("assets/logo_transparent.png"),
               SizedBox(
                 height: 44,
               ),
@@ -159,7 +157,7 @@ class _RegisterState extends State<Register> {
               Container(
                 width: double.infinity,
                 child: RawMaterialButton(
-                  fillColor: Colors.orange,
+                  fillColor: ColorsPersonal.arancione_bello,
                   elevation: 0,
                   padding: EdgeInsets.symmetric(vertical: 20),
                   shape: RoundedRectangleBorder(
@@ -179,7 +177,23 @@ class _RegisterState extends State<Register> {
                   },
                   child: Text("Registrazione"),
                 ),
-              )
+              ),
+              SizedBox(
+                height: 30,
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => Login()));
+                },
+                child: const Text(
+                  "Torna al Login",
+                  style: TextStyle(
+                      color: Colors.orangeAccent,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15),
+                ),
+              ),
             ],
           ),
         ),
