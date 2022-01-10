@@ -4,7 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:newbie_bartender/favourites.dart';
 import 'package:newbie_bartender/login.dart';
+import 'package:newbie_bartender/modifica_password.dart';
+import 'package:newbie_bartender/utils/colors.dart';
 
 class MyProfile extends StatefulWidget {
   MyProfile({Key? key}) : super(key: key);
@@ -118,14 +121,46 @@ class _MyProfileState extends State<MyProfile> {
                         SizedBox(
                           height: 30,
                         ),
+                        SizedBox(
+                          height: 30,
+                        ),
                         ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Favourites()));
+                          },
+                          child: Text(
+                            "Preferiti",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            primary: ColorsPersonal.verde_button,
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25),
+                            ),
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ModificaPassword()));
+                          },
                           child: Text(
                             "Modifica Password",
                             style: TextStyle(color: Colors.white),
                           ),
                           style: ElevatedButton.styleFrom(
-                              primary: Colors.lightGreenAccent, elevation: 0),
+                            primary: ColorsPersonal.verde_button,
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25),
+                            ),
+                          ),
                         ),
                       ]),
                     ));

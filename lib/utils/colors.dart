@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 
 class ColorsPersonal {
   static const Color arancione_bello = Color(0xFFFA7E0A);
+  static const Color arancione_sfondo = Color(0xFFFFC085);
+  static const Color verde_button = Color(0xFF66B229);
+  static const Color grigio_batman = Color(0xB2FFFFFF);
 
   static MaterialColor buildMaterialColor(Color color) {
     List strengths = <double>[.05];

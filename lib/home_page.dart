@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:newbie_bartender/alcolici.dart';
 import 'package:newbie_bartender/analcolici.dart';
+import 'package:newbie_bartender/utils/colors.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -13,6 +14,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ColorsPersonal.arancione_sfondo,
       body: Center(
         child: Column(
           children: [

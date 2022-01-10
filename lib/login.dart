@@ -98,12 +98,7 @@ class _LoginState extends State<Login> {
               ),
               Container(
                 width: double.infinity,
-                child: RawMaterialButton(
-                  fillColor: ColorsPersonal.arancione_bello,
-                  elevation: 0,
-                  padding: EdgeInsets.symmetric(vertical: 20),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                child: ElevatedButton(
                   onPressed: () async {
                     User? user = await login(
                         email: emailController.text,
@@ -112,26 +107,43 @@ class _LoginState extends State<Login> {
                     if (user != null) {
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
                           builder: (context) => Navigation()));
+                          Fluttertoast.showToast(msg: "Login effettuato");
                     }
                   },
-                  child: Text("Login"),
+                  child: Text(
+                    "LOGIN",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    primary: ColorsPersonal.arancione_bello,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                  ),
                 ),
               ),
               SizedBox(
                 height: 30,
               ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => Register()));
-                },
-                child: const Text(
-                  "Registrati",
-                  style: TextStyle(
-                      color: Colors.orangeAccent,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15),
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Non sei registrato? "),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (context) => Register()));
+                    },
+                    child: const Text(
+                      "Registrati ora!",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

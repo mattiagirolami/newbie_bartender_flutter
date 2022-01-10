@@ -156,12 +156,7 @@ class _RegisterState extends State<Register> {
               ),
               Container(
                 width: double.infinity,
-                child: RawMaterialButton(
-                  fillColor: ColorsPersonal.arancione_bello,
-                  elevation: 0,
-                  padding: EdgeInsets.symmetric(vertical: 20),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                child: ElevatedButton(
                   onPressed: () async {
                     User? user = await register(
                         username: usernameController.text,
@@ -175,24 +170,40 @@ class _RegisterState extends State<Register> {
                           MaterialPageRoute(builder: (context) => Login()));
                     }
                   },
-                  child: Text("Registrazione"),
+                  child: Text(
+                    "REGISTRATI",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    primary: ColorsPersonal.arancione_bello,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                  ),
                 ),
               ),
               SizedBox(
                 height: 30,
               ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => Login()));
-                },
-                child: const Text(
-                  "Torna al Login",
-                  style: TextStyle(
-                      color: Colors.orangeAccent,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15),
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Sei già registrato? "),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (context) => Login()));
+                    },
+                    child: const Text(
+                      "Torna al login",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

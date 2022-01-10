@@ -14,8 +14,12 @@ class _AnalcoliciState extends State<Analcolici> {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
+          iconTheme: IconThemeData(
+            color: Colors.white,
+          ),
           title: Text(
             "Analcolici",
+            style: TextStyle(color: Colors.white),
           ),
           elevation: 0,
         ),
