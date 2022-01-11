@@ -32,12 +32,42 @@ class _VisualizzaRicettaState extends State<VisualizzaRicetta> {
 
   String? voto;
 
-  HashMap<String, String> valutazione = HashMap();
+  HashMap<String, String> valutazioneMap = HashMap();
 
-  List pacca = [];
+  List valutazioneList = [];
 
   @override
   Widget build(BuildContext context) {
+    DropdownMenuItem<String> buildMenuItem(String item) => DropdownMenuItem(
+        value: item,
+        child: Text(item,
+            style: TextStyle(fontWeight: FontWeight.normal, fontSize: 20)));
+
+    final spinnerVoti = Container(
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey, width: 1)),
+      child: DropdownButtonFormField<String>(
+        hint: Text("Voto"),
+        value: voto,
+        icon: Icon(Icons.arrow_drop_down, color: Colors.black),
+        iconSize: 36,
+        isExpanded: true,
+        items: votiPossibili.map(buildMenuItem).toList(),
+        onChanged: (value) => setState(() {
+          ingredientiList = [];
+          voto = value;
+        }),
+        validator: (value) {
+          if (value!.isEmpty) {
+            return ("Inserire un voto");
+          }
+        },
+      ),
+    );
+
+    /*
     final spinnerVoti = DropdownButton<String>(
         hint: Text("Voto"),
         items: votiPossibili.map((String value) {
@@ -48,7 +78,8 @@ class _VisualizzaRicettaState extends State<VisualizzaRicetta> {
         }).toList(),
         onChanged: (value) => setState(() {
               voto = value;
-            }));
+            })); 
+            */
 
     return Scaffold(
       backgroundColor: ColorsPersonal.arancione_bello,
@@ -172,7 +203,10 @@ class _VisualizzaRicettaState extends State<VisualizzaRicetta> {
                   SizedBox(
                     height: 20,
                   ),
-                  Text("${getIngredienti()}"),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 40, right: 40),
+                    child: Text("${getIngredienti()}"),
+                  ),
                   SizedBox(
                     height: 20,
                   ),
@@ -200,53 +234,53 @@ class _VisualizzaRicettaState extends State<VisualizzaRicetta> {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10, top: 40),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text("Aggiungi la tua valutazione:",
-                      style: TextStyle(fontWeight: FontWeight.bold))
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 30, top: 40),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Container(
-                    width: 20,
-                    height: 20,
-                    child: SafeArea(
-                      child: Column(
-                        children: [spinnerVoti],
-                      ),
+            (!checkRatings())
+                ? Padding(
+                    padding: const EdgeInsets.only(left: 10, top: 40),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text("Aggiungi la tua valutazione:",
+                            style: TextStyle(fontWeight: FontWeight.bold))
+                      ],
                     ),
-                  ),
-                  SizedBox(
-                    width: 30,
-                  ),
-                  Column(
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          addRating();
-                        },
-                        child: Text(
-                          "Salva",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          primary: ColorsPersonal.verde_button,
-                          elevation: 0,
-                        ),
-                      ),
-                    ],
                   )
-                ],
-              ),
-            ),
+                : Container(),
+            (!checkRatings())
+                ? Padding(
+                    padding: const EdgeInsets.only(left: 30, top: 40),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: 100,
+                          height: 100,
+                          child: spinnerVoti,
+                        ),
+                        SizedBox(
+                          width: 30,
+                        ),
+                        Column(
+                          children: [
+                            ElevatedButton(
+                              onPressed: () {
+                                addRating();
+                              },
+                              child: Text(
+                                "Salva",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                primary: ColorsPersonal.verde_button,
+                                elevation: 0,
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  )
+                : Container(),
             Padding(
               padding: const EdgeInsets.only(left: 10, top: 60),
               child: Row(
@@ -258,6 +292,9 @@ class _VisualizzaRicettaState extends State<VisualizzaRicetta> {
                 ],
               ),
             ),
+            SizedBox(
+              height: 30,
+            )
           ],
         )),
       ),
@@ -292,17 +329,20 @@ class _VisualizzaRicettaState extends State<VisualizzaRicetta> {
   }
 
   addRating() {
-    pacca.length = 1;
+    isRated = true;
+    valutazioneList.length = 1;
 
-    valutazione["email"] = auth.email!;
-    valutazione["voto"] = voto!;
+    valutazioneMap["email"] = auth.email!;
+    valutazioneMap["voto"] = voto!;
 
-    pacca[0] = valutazione;
+    valutazioneList[0] = valutazioneMap;
 
     FirebaseFirestore.instance
         .collection("${widget.document["tipoRicetta"]}")
         .doc(widget.document.id)
-        .update({"valutazioni": FieldValue.arrayUnion(pacca)});
+        .update({"valutazioni": FieldValue.arrayUnion(valutazioneList)});
+
+    Fluttertoast.showToast(msg: "Hai inserito una valutazione di $voto/5");
   }
 
   checkFavourite() {
