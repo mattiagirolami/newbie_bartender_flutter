@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:newbie_bartender/utils/colors.dart';
@@ -36,6 +37,11 @@ class _VisualizzaRicettaState extends State<VisualizzaRicetta> {
 
   List valutazioneList = [];
 
+  String urlImmagine = "";
+
+  String defaultImage =
+      "https://firebasestorage.googleapis.com/v0/b/newbie-bartender.appspot.com/o/images%2Fdrink_default.jpg?alt=media&token=59abc9b0-02c7-4410-beaf-c66b63131d6e";
+
   @override
   Widget build(BuildContext context) {
     DropdownMenuItem<String> buildMenuItem(String item) => DropdownMenuItem(
@@ -56,7 +62,7 @@ class _VisualizzaRicettaState extends State<VisualizzaRicetta> {
         isExpanded: true,
         items: votiPossibili.map(buildMenuItem).toList(),
         onChanged: (value) => setState(() {
-          ingredientiList = [];
+          emptyIngredienti();
           voto = value;
         }),
         validator: (value) {
@@ -67,238 +73,246 @@ class _VisualizzaRicettaState extends State<VisualizzaRicetta> {
       ),
     );
 
-    /*
-    final spinnerVoti = DropdownButton<String>(
-        hint: Text("Voto"),
-        items: votiPossibili.map((String value) {
-          return DropdownMenuItem<String>(
-            value: voto,
-            child: Text(value),
-          );
-        }).toList(),
-        onChanged: (value) => setState(() {
-              voto = value;
-            })); 
-            */
-
-    return Scaffold(
-      backgroundColor: ColorsPersonal.arancione_bello,
-      appBar: AppBar(
-        title: Text(
-          "${widget.document["tipoRicetta"]}",
-          style: TextStyle(color: Colors.white),
-        ),
-        iconTheme: IconThemeData(
-          color: Colors.white,
-        ),
-        actions: <Widget>[
-          IconButton(
-            onPressed: () {
-              if (!checkFavourite()) {
-                addFavourite();
-              } else {
-                removeFavourite();
-              }
-              Navigator.pop(context);
-            },
-            icon: (!checkFavourite())
-                ? Icon(
-                    Icons.star_border_outlined,
-                    color: ColorsPersonal.grigio_batman,
-                  )
-                : Icon(
-                    Icons.star,
-                    color: ColorsPersonal.grigio_batman,
-                  ),
-          )
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Center(
-            child: Column(
-          children: [
-            Stack(children: [
-              Ink.image(
-                image: NetworkImage(
-                    "https://firebasestorage.googleapis.com/v0/b/newbie-bartender.appspot.com/o/images%2Fdrink_default.jpg?alt=media&token=59abc9b0-02c7-4410-beaf-c66b63131d6e"),
-                height: 240,
-                fit: BoxFit.cover,
-              ),
-              Positioned(
-                  bottom: 16,
-                  right: 16,
-                  left: 32,
-                  child: Text(
-                    "${widget.document["titolo"]}",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 40,
-                        fontWeight: FontWeight.bold),
-                  )),
-            ]),
-            Container(
-              padding: EdgeInsets.only(top: 15),
-              color: Color(0xFFF8E9BC),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Column(
-                        children: [
-                          Text(
-                            "Tipologia:",
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Text("${widget.document["tipoRicetta"]}",
-                              style: TextStyle(fontWeight: FontWeight.bold))
-                        ],
-                      ),
-                      SizedBox(
-                        width: 60,
-                      ),
-                      Column(
-                        children: [
-                          Text("Difficoltà:",
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Text("${widget.document["difficoltà"]}",
-                              style: TextStyle(fontWeight: FontWeight.bold))
-                        ],
-                      ),
-                      SizedBox(
-                        width: 60,
-                      ),
-                      Column(
-                        children: [
-                          Text("Rating:",
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Text("${calculateAvg()} su 5",
-                              style: TextStyle(fontWeight: FontWeight.bold))
-                        ],
-                      ),
+    return FutureBuilder(
+        future: getImmagine(),
+        builder: (BuildContext context, AsyncSnapshot<String> text) {
+          return FutureBuilder(
+              future: emptyIngredienti(),
+              builder: (BuildContext context, AsyncSnapshot<String> text) {
+                return Scaffold(
+                  backgroundColor: ColorsPersonal.arancione_bello,
+                  appBar: AppBar(
+                    title: Text(
+                      "${widget.document["tipoRicetta"]}",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    iconTheme: IconThemeData(
+                      color: Colors.white,
+                    ),
+                    actions: <Widget>[
+                      IconButton(
+                        onPressed: () {
+                          if (!checkFavourite()) {
+                            addFavourite();
+                          } else {
+                            removeFavourite();
+                          }
+                          Navigator.pop(context);
+                        },
+                        icon: (!checkFavourite())
+                            ? Icon(
+                                Icons.star_border_outlined,
+                                color: ColorsPersonal.grigio_batman,
+                              )
+                            : Icon(
+                                Icons.star,
+                                color: ColorsPersonal.grigio_batman,
+                              ),
+                      )
                     ],
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                  body: SingleChildScrollView(
+                    child: Center(
+                        child: Column(
                       children: [
-                        Text("Ingredienti:",
-                            style: TextStyle(fontWeight: FontWeight.bold))
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 40, right: 40),
-                    child: Text("${getIngredienti()}"),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10, top: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text("Procedimento:",
-                      style: TextStyle(fontWeight: FontWeight.bold))
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 30, top: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    "${widget.document["descrizione"]}",
-                  )
-                ],
-              ),
-            ),
-            (!checkRatings())
-                ? Padding(
-                    padding: const EdgeInsets.only(left: 10, top: 40),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text("Aggiungi la tua valutazione:",
-                            style: TextStyle(fontWeight: FontWeight.bold))
-                      ],
-                    ),
-                  )
-                : Container(),
-            (!checkRatings())
-                ? Padding(
-                    padding: const EdgeInsets.only(left: 30, top: 40),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
+                        Stack(children: [
+                          Ink.image(
+                            image: (urlImmagine == "")
+                                ? NetworkImage(defaultImage)
+                                : NetworkImage(urlImmagine),
+                            height: 240,
+                            fit: BoxFit.cover,
+                          ),
+                          Positioned(
+                              bottom: 16,
+                              right: 16,
+                              left: 32,
+                              child: Text(
+                                "${widget.document["titolo"]}",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 40,
+                                    fontWeight: FontWeight.bold),
+                              )),
+                        ]),
                         Container(
-                          width: 100,
-                          height: 100,
-                          child: spinnerVoti,
+                          padding: EdgeInsets.only(top: 15),
+                          color: Color(0xFFF8E9BC),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Column(
+                                    children: [
+                                      Text(
+                                        "Tipologia:",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      Text("${widget.document["tipoRicetta"]}",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold))
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    width: 60,
+                                  ),
+                                  Column(
+                                    children: [
+                                      Text("Difficoltà:",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold)),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      Text("${widget.document["difficoltà"]}",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold))
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    width: 60,
+                                  ),
+                                  Column(
+                                    children: [
+                                      Text("Rating:",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold)),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      Text("${calculateAvg()} su 5",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold))
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 10),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text("Ingredienti:",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold))
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 40, right: 40),
+                                child: Text("${getIngredienti()}"),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10, top: 20),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text("Procedimento:",
+                                  style: TextStyle(fontWeight: FontWeight.bold))
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 30, top: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                "${widget.document["descrizione"]}",
+                              )
+                            ],
+                          ),
+                        ),
+                        (!checkRatings())
+                            ? Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 10, top: 40),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text("Aggiungi la tua valutazione:",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold))
+                                  ],
+                                ),
+                              )
+                            : Container(),
+                        (!checkRatings())
+                            ? Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 30, top: 40),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      width: 100,
+                                      height: 100,
+                                      child: spinnerVoti,
+                                    ),
+                                    SizedBox(
+                                      width: 30,
+                                    ),
+                                    Column(
+                                      children: [
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            addRating();
+                                          },
+                                          child: Text(
+                                            "Salva",
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                          style: ElevatedButton.styleFrom(
+                                            primary:
+                                                ColorsPersonal.verde_button,
+                                            elevation: 0,
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              )
+                            : Container(),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10, top: 60),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Ricetta di ${widget.document["autore"]}",
+                              )
+                            ],
+                          ),
                         ),
                         SizedBox(
-                          width: 30,
-                        ),
-                        Column(
-                          children: [
-                            ElevatedButton(
-                              onPressed: () {
-                                addRating();
-                              },
-                              child: Text(
-                                "Salva",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                primary: ColorsPersonal.verde_button,
-                                elevation: 0,
-                              ),
-                            ),
-                          ],
+                          height: 30,
                         )
                       ],
-                    ),
-                  )
-                : Container(),
-            Padding(
-              padding: const EdgeInsets.only(left: 10, top: 60),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    "Ricetta di ${widget.document["autore"]}",
-                  )
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 30,
-            )
-          ],
-        )),
-      ),
-    );
+                    )),
+                  ),
+                );
+              });
+        });
   }
 
   double calculateAvg() {
@@ -385,5 +399,18 @@ class _VisualizzaRicettaState extends State<VisualizzaRicetta> {
       ingredientiList.add(ingrediente);
     }
     return ingredientiList;
+  }
+
+  Future<String> getImmagine() async {
+    urlImmagine = await FirebaseStorage.instance
+        .ref()
+        .child("${widget.document["tipoRicetta"]}/${widget.document.id}.jpg")
+        .getDownloadURL();
+
+    return urlImmagine;
+  }
+
+  emptyIngredienti() {
+    ingredientiList = [];
   }
 }
