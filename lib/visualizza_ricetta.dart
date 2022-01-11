@@ -215,27 +215,31 @@ class _VisualizzaRicettaState extends State<VisualizzaRicetta> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Column(
-                    children: [spinnerVoti],
+                  Container(
+                    width: 20,
+                    height: 20,
+                    child: SafeArea(
+                      child: Column(
+                        children: [spinnerVoti],
+                      ),
+                    ),
                   ),
                   SizedBox(
                     width: 30,
                   ),
                   Column(
                     children: [
-                      SingleChildScrollView(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            addRating();
-                          },
-                          child: Text(
-                            "Salva",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            primary: ColorsPersonal.verde_button,
-                            elevation: 0,
-                          ),
+                      ElevatedButton(
+                        onPressed: () {
+                          addRating();
+                        },
+                        child: Text(
+                          "Salva",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          primary: ColorsPersonal.verde_button,
+                          elevation: 0,
                         ),
                       ),
                     ],
