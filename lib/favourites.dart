@@ -15,10 +15,10 @@ class _FavouritesState extends State<Favourites> {
 
   @override
   Widget build(BuildContext context) {
-    Widget lista_preferiti(String tipoRicetta) {
+    Widget lista_preferiti() {
       return StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance
-              .collection(tipoRicetta)
+              .collection("cocktail")
               .where("preferiti", arrayContains: auth.email)
               .snapshots(),
           builder: (context, snapshot) {
@@ -66,11 +66,8 @@ class _FavouritesState extends State<Favourites> {
           child: Column(
             children: [
               Container(
-                child: lista_preferiti("alcolico"),
+                child: lista_preferiti(),
               ),
-              Container(
-                child: lista_preferiti("analcolico"),
-              )
             ],
           ),
         ),

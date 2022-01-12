@@ -1,6 +1,7 @@
 import 'dart:collection';
 import 'dart:ffi';
 import 'dart:convert';
+import 'dart:html';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -318,17 +319,23 @@ class _VisualizzaRicettaState extends State<VisualizzaRicetta> {
   double calculateAvg() {
     int somma = 0;
     int counter = 0;
+    double media = 0;
 
     for (var valutazione in widget.document["valutazioni"]) {
       int voto = int.parse(widget.document["valutazioni"][counter]["voto"]);
       somma += voto;
       counter++;
     }
-    if (somma == 0) {
-      return 0;
-    } else {
-      return (somma / counter);
+    if (somma != 0) {
+      media = (somma / counter);
     }
+
+    FirebaseFirestore.instance
+        .collection("cocktail")
+        .doc(widget.document.id)
+        .update({"mediaValutazioni": media});
+
+    return media;
   }
 
   checkRatings() {

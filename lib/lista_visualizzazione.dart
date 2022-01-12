@@ -4,7 +4,7 @@ import 'package:newbie_bartender/visualizza_ricetta.dart';
 
 Widget listaVisualizzazione(String? tipoRicetta) {
   return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance.collection(tipoRicetta!).snapshots(),
+      stream: FirebaseFirestore.instance.collection("cocktail").where("tipoRicetta", isEqualTo: tipoRicetta).snapshots(),
       builder: (context, snapshot) {
         return (snapshot.connectionState == ConnectionState.waiting)
             ? Center(child: CircularProgressIndicator())
