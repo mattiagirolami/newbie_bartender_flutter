@@ -1,7 +1,6 @@
 import 'dart:collection';
 import 'dart:ffi';
 import 'dart:convert';
-import 'dart:html';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -30,7 +29,7 @@ class _VisualizzaRicettaState extends State<VisualizzaRicetta> {
 
   bool isRated = false;
 
-  final List<String> votiPossibili = ["1", "2", "3", "4", "5"];
+  final List<String> votiPossibili = ["0", "1", "2", "3", "4", "5"];
 
   String? voto;
 
@@ -359,7 +358,7 @@ class _VisualizzaRicettaState extends State<VisualizzaRicetta> {
     valutazioneList[0] = valutazioneMap;
 
     FirebaseFirestore.instance
-        .collection("${widget.document["tipoRicetta"]}")
+        .collection("cocktail")
         .doc(widget.document.id)
         .update({"valutazioni": FieldValue.arrayUnion(valutazioneList)});
 
@@ -381,7 +380,7 @@ class _VisualizzaRicettaState extends State<VisualizzaRicetta> {
     favouriteList[0] = auth.email.toString();
 
     FirebaseFirestore.instance
-        .collection(widget.document["tipoRicetta"])
+        .collection("cocktail")
         .doc(widget.document.id)
         .update({"preferiti": FieldValue.arrayUnion(favouriteList)});
 
@@ -394,7 +393,7 @@ class _VisualizzaRicettaState extends State<VisualizzaRicetta> {
     favouriteList[0] = auth.email.toString();
 
     FirebaseFirestore.instance
-        .collection(widget.document["tipoRicetta"])
+        .collection("cocktail")
         .doc(widget.document.id)
         .update({"preferiti": FieldValue.arrayRemove(favouriteList)});
 
