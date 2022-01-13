@@ -1,9 +1,12 @@
 import 'dart:collection';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:newbie_bartender/favourites.dart';
 import 'package:newbie_bartender/login.dart';
 import 'package:newbie_bartender/modifica_password.dart';
@@ -24,6 +27,9 @@ class _MyProfileState extends State<MyProfile> {
   String username = "";
 
   String urlImmagine = "";
+
+  File? imageFile;
+  final picker = ImagePicker();
 
   @override
   void initState() {
@@ -91,7 +97,9 @@ class _MyProfileState extends State<MyProfile> {
                           ]),
                           Column(children: [
                             ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                caricaFoto(ImageSource.camera);
+                              },
                               child: Icon(Icons.photo_camera,
                                   size: 20, color: Colors.white),
                               style: ElevatedButton.styleFrom(
@@ -100,7 +108,9 @@ class _MyProfileState extends State<MyProfile> {
                               ),
                             ),
                             ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                caricaFoto(ImageSource.gallery);
+                              },
                               child: Icon(Icons.edit_outlined,
                                   size: 20, color: Colors.white),
                               style: ElevatedButton.styleFrom(
@@ -166,5 +176,20 @@ class _MyProfileState extends State<MyProfile> {
                     ));
               });
         });
+  }
+
+  caricaFoto(ImageSource source) async {
+    final pickedFile = await picker.getImage(source: source);
+
+    setState(() {
+      imageFile = File(pickedFile!.path);
+    });
+
+    await FirebaseStorage.instance
+        .ref()
+        .child("images/${auth!.email}.jpg")
+        .putFile(imageFile!);
+
+    Fluttertoast.showToast(msg: "Immagine caricata");
   }
 }
