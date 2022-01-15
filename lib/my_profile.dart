@@ -121,54 +121,65 @@ class _MyProfileState extends State<MyProfile> {
                           ]),
                         ]),
                         SizedBox(
-                          height: 30,
+                          height: 40,
                         ),
-                        Text("$username"),
+                        Text("$username", style: TextStyle(fontSize: 30),),
                         SizedBox(
                           height: 30,
                         ),
-                        Text("${auth!.email}"),
+                        Text("${auth!.email}", style: TextStyle(fontSize: 20)),
                         SizedBox(
                           height: 30,
                         ),
                         SizedBox(
                           height: 30,
                         ),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Favourites()));
-                          },
-                          child: Text(
-                            "Preferiti",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            primary: ColorsPersonal.verde_button,
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25),
+                        SizedBox(
+                          width: 250,
+                          height: 50,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Favourites()));
+                            },
+                            child: Text(
+                              "Preferiti",
+                              style: TextStyle(color: Colors.white, fontSize: 20),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              primary: ColorsPersonal.verde_button,
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(25),
+                              ),
                             ),
                           ),
                         ),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ModificaPassword()));
-                          },
-                          child: Text(
-                            "Modifica Password",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            primary: ColorsPersonal.verde_button,
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        SizedBox(
+                          width: 250,
+                          height: 50,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ModificaPassword()));
+                            },
+                            child: Text(
+                              "Modifica Password",
+                              style: TextStyle(color: Colors.white,fontSize: 20),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              primary: ColorsPersonal.verde_button,
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(25),
+                              ),
                             ),
                           ),
                         ),
