@@ -2,9 +2,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:newbie_bartender/visualizza_ricetta.dart';
 
-Widget listaVisualizzazione(String? tipoRicetta) {
+Widget listaVisualizzazione(String? tipoRicetta, String? ingrediente) {
   return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance.collection("cocktail").where("tipoRicetta", isEqualTo: tipoRicetta).snapshots(),
+      stream: (ingrediente != "" && ingrediente != null)
+          ? FirebaseFirestore.instance
+              .collection("cocktail")
+              .where("tipoRicetta", isEqualTo: tipoRicetta)
+              .where("ingredienti", arrayContains: ingrediente)
+              .snapshots()
+          : FirebaseFirestore.instance
+              .collection("cocktail")
+              .where("tipoRicetta", isEqualTo: tipoRicetta)
+              .snapshots(),
       builder: (context, snapshot) {
         return (snapshot.connectionState == ConnectionState.waiting)
             ? Center(child: CircularProgressIndicator())

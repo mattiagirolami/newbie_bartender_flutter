@@ -9,6 +9,7 @@ class Analcolici extends StatefulWidget {
 }
 
 class _AnalcoliciState extends State<Analcolici> {
+  String ingrediente = "";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,6 +24,24 @@ class _AnalcoliciState extends State<Analcolici> {
           ),
           elevation: 0,
         ),
-        body: listaVisualizzazione("analcolico"));
+        body: Container(
+          child: Column(
+            children: [
+              Card(
+                child: TextField(
+                  decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.search),
+                      hintText: "Ricerca ingrediente"),
+                  onChanged: (value) {
+                    setState(() {
+                      ingrediente = value;
+                    });
+                  },
+                ),
+              ),
+              Expanded(child: listaVisualizzazione("analcolico", ingrediente))
+            ],
+          ),
+        ));
   }
 }

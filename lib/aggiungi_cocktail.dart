@@ -84,13 +84,19 @@ class _AggiungiCocktailState extends State<AggiungiCocktail> {
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: Colors.grey, width: 1)),
       child: DropdownButtonFormField<String>(
-          hint: Text("Difficoltà"),
-          value: difficolta,
-          icon: Icon(Icons.arrow_drop_down, color: Colors.black),
-          iconSize: 20,
-          isExpanded: true,
-          items: difficoltaPossibili.map(buildMenuItem).toList(),
-          onChanged: (value) => difficolta = value),
+        hint: Text("Difficoltà"),
+        value: difficolta,
+        icon: Icon(Icons.arrow_drop_down, color: Colors.black),
+        iconSize: 20,
+        isExpanded: true,
+        items: difficoltaPossibili.map(buildMenuItem).toList(),
+        onChanged: (value) => difficolta = value,
+        validator: (value) {
+          if (value!.isEmpty) {
+            return ("Inserire la difficoltà del cocktail");
+          }
+        },
+      ),
     );
 
     return FutureBuilder(
@@ -264,7 +270,8 @@ class _AggiungiCocktailState extends State<AggiungiCocktail> {
 
     await FirebaseStorage.instance
         .ref()
-        .child("${cocktail["tipoRicetta"].toString()}/${cocktail["id"].toString()}.jpg")
+        .child(
+            "${cocktail["tipoRicetta"].toString()}/${cocktail["id"].toString()}.jpg")
         .putFile(imageFile!);
 
     Fluttertoast.showToast(msg: "Ricetta salvata correttamente");
