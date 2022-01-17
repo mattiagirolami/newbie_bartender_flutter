@@ -235,8 +235,10 @@ class _VisualizzaRicettaState extends State<VisualizzaRicetta> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Text(
-                                "${widget.document["descrizione"]}",
+                              Expanded(
+                                child: Text(
+                                  "${widget.document["descrizione"]}",
+                                ),
                               )
                             ],
                           ),

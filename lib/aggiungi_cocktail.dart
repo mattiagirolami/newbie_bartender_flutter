@@ -275,11 +275,15 @@ class _AggiungiCocktailState extends State<AggiungiCocktail> {
 
     await FirebaseFirestore.instance.collection("cocktail").doc().set(cocktail);
 
+    if(imageFile != null)  {
+
     await FirebaseStorage.instance
         .ref()
         .child(
             "${cocktail["tipoRicetta"].toString()}/${cocktail["id"].toString()}.jpg")
         .putFile(imageFile!);
+
+    }
 
     Fluttertoast.showToast(msg: "Ricetta salvata correttamente");
 
