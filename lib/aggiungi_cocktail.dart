@@ -180,7 +180,7 @@ class _AggiungiCocktailState extends State<AggiungiCocktail> {
                     Row(
                       children: [
                         SizedBox(
-                          width: 200,
+                          width: 160,
                           child: TextField(
                             controller: ingredienteController,
                             decoration: InputDecoration(
@@ -189,7 +189,7 @@ class _AggiungiCocktailState extends State<AggiungiCocktail> {
                           ),
                         ),
                         SizedBox(
-                          width: 20,
+                          width: 10,
                         ),
                         ElevatedButton(
                             onPressed: () {
