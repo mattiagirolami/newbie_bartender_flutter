@@ -236,6 +236,7 @@ class _AggiungiCocktailState extends State<AggiungiCocktail> {
   }
 
   aggiungiCocktail(String titolo, String descrizione) async {
+
     if (titolo == "") {
       Fluttertoast.showToast(msg: "Inserire il nome del cocktail");
       return;
@@ -248,10 +249,16 @@ class _AggiungiCocktailState extends State<AggiungiCocktail> {
       Fluttertoast.showToast(msg: "Inserire la descrizione");
       return;
     }
+    if (difficolta == null) {
+      Fluttertoast.showToast(msg: "Inserire la difficoltà");
+      return;
+    }
     if (listaIngredienti.isEmpty) {
       Fluttertoast.showToast(msg: "Inserire almeno un ingrediente");
       return;
     }
+
+    Fluttertoast.showToast(msg: "Salvataggio in corso...");
 
     Map<String, dynamic> cocktail = HashMap();
 
