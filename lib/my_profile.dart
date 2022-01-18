@@ -201,6 +201,8 @@ class _MyProfileState extends State<MyProfile> {
         .child("images/${auth!.email}.jpg")
         .putFile(imageFile!);
 
+        initState();
+
     Fluttertoast.showToast(msg: "Immagine caricata");
   }
 }
