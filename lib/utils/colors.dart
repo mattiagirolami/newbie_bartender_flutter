@@ -6,6 +6,7 @@ class ColorsPersonal {
   static const Color verde_button = Color(0xFF66B229);
   static const Color grigio_batman = Color(0xB2FFFFFF);
 
+// genera un colore primary
   static MaterialColor buildMaterialColor(Color color) {
     List strengths = <double>[.05];
     Map<int, Color> swatch = {};

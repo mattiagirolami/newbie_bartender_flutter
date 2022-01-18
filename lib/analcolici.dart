@@ -8,6 +8,7 @@ class Analcolici extends StatefulWidget {
   _AnalcoliciState createState() => _AnalcoliciState();
 }
 
+// lista dei cocktail analcolici
 class _AnalcoliciState extends State<Analcolici> {
   String ingrediente = "";
   @override

@@ -13,6 +13,7 @@ class Stats extends StatefulWidget {
   _StatsState createState() => _StatsState();
 }
 
+// lista cocktail più amati
 class _StatsState extends State<Stats> {
   String urlImmagine = "";
 
@@ -31,6 +32,7 @@ class _StatsState extends State<Stats> {
         body: listaVisualizzazione());
   }
 
+// lista cocktail
   Widget listaVisualizzazione() {
     return StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
@@ -77,7 +79,8 @@ class _StatsState extends State<Stats> {
                                     ),
                                   ]),
                                   Padding(
-                                    padding: EdgeInsets.fromLTRB(20, 0, 0, 10),
+                                      padding:
+                                          EdgeInsets.fromLTRB(20, 0, 0, 10),
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,

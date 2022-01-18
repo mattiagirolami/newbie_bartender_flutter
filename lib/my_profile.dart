@@ -31,6 +31,7 @@ class _MyProfileState extends State<MyProfile> {
   File? imageFile;
   final picker = ImagePicker();
 
+// prende l'utente all'apertura
   @override
   void initState() {
     super.initState();
@@ -38,6 +39,7 @@ class _MyProfileState extends State<MyProfile> {
     setState(() {});
   }
 
+  // prende username utente da firebase
   Future<String> getUsername() async {
     user = await FirebaseFirestore.instance
         .collection("users")
@@ -47,6 +49,7 @@ class _MyProfileState extends State<MyProfile> {
     return username;
   }
 
+// prende immagine profilo da storage firebase
   Future<String> getImmagine() async {
     urlImmagine = await FirebaseStorage.instance
         .ref()
@@ -55,6 +58,7 @@ class _MyProfileState extends State<MyProfile> {
     return urlImmagine;
   }
 
+// logout
   logout() async {
     await FirebaseAuth.instance.signOut();
     Navigator.pushAndRemoveUntil(context,
@@ -183,12 +187,16 @@ class _MyProfileState extends State<MyProfile> {
                             ),
                           ),
                         ),
+                        SizedBox(
+                          height: 20,
+                        ),
                       ]),
                     ));
               });
         });
   }
 
+// carica nuova foto attraverso fotocamera o risorse
   caricaFoto(ImageSource source) async {
     final pickedFile = await picker.getImage(source: source);
 

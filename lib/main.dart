@@ -7,6 +7,7 @@ import 'package:newbie_bartender/utils/colors.dart';
 import 'package:newbie_bartender/login.dart';
 import 'package:newbie_bartender/navigation.dart';
 
+// punto di partenza dell'applicazione
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
+// splash
 class StartScreen extends StatefulWidget {
   StartScreen({Key? key}) : super(key: key);
 

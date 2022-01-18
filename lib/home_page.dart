@@ -10,6 +10,7 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
+// schermata di Home attraverso cui l'utente accede alle liste dei cocktail
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {

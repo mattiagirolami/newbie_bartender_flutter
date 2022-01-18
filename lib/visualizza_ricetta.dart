@@ -18,6 +18,7 @@ class VisualizzaRicetta extends StatefulWidget {
   _VisualizzaRicettaState createState() => _VisualizzaRicettaState();
 }
 
+// visualizza specifiche ricetta
 class _VisualizzaRicettaState extends State<VisualizzaRicetta> {
   User auth = FirebaseAuth.instance.currentUser!;
 
@@ -39,6 +40,7 @@ class _VisualizzaRicettaState extends State<VisualizzaRicetta> {
 
   String urlImmagine = "";
 
+// immagine di default su storage
   String defaultImage =
       "https://firebasestorage.googleapis.com/v0/b/newbie-bartender.appspot.com/o/images%2Fdrink_default.jpg?alt=media&token=59abc9b0-02c7-4410-beaf-c66b63131d6e";
 
@@ -49,6 +51,7 @@ class _VisualizzaRicettaState extends State<VisualizzaRicetta> {
         child: Text(item,
             style: TextStyle(fontWeight: FontWeight.normal, fontSize: 20)));
 
+// spinner voti
     final spinnerVoti = Container(
       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       decoration: BoxDecoration(
@@ -317,6 +320,7 @@ class _VisualizzaRicettaState extends State<VisualizzaRicetta> {
         });
   }
 
+// calcola media valutazione
   double calculateAvg() {
     int somma = 0;
     int counter = 0;
@@ -331,6 +335,7 @@ class _VisualizzaRicettaState extends State<VisualizzaRicetta> {
       media = (somma / counter);
     }
 
+// aggiorna media
     FirebaseFirestore.instance
         .collection("cocktail")
         .doc(widget.document.id)
@@ -339,6 +344,7 @@ class _VisualizzaRicettaState extends State<VisualizzaRicetta> {
     return media;
   }
 
+// controlla se hai inserito voto
   checkRatings() {
     int counter = 0;
     for (var valutazione in widget.document["valutazioni"]) {
@@ -350,6 +356,7 @@ class _VisualizzaRicettaState extends State<VisualizzaRicetta> {
     return isRated;
   }
 
+  // aggiunge voto
   addRating() {
     isRated = true;
     valutazioneList.length = 1;
@@ -367,6 +374,7 @@ class _VisualizzaRicettaState extends State<VisualizzaRicetta> {
     Fluttertoast.showToast(msg: "Hai inserito una valutazione di $voto/5");
   }
 
+// controlla se aggiunto a preferiti
   checkFavourite() {
     for (String favourite in widget.document["preferiti"]) {
       if (favourite == auth.email) {
@@ -376,6 +384,7 @@ class _VisualizzaRicettaState extends State<VisualizzaRicetta> {
     return isFav;
   }
 
+// aggiunge a preferiti
   addFavourite() {
     isFav = true;
     favouriteList.length = 1;
@@ -389,6 +398,7 @@ class _VisualizzaRicettaState extends State<VisualizzaRicetta> {
     return Fluttertoast.showToast(msg: "Aggiunto ai Preferiti");
   }
 
+// rimuove da preferiti
   removeFavourite() {
     isFav = false;
     favouriteList.length = 1;
@@ -402,6 +412,7 @@ class _VisualizzaRicettaState extends State<VisualizzaRicetta> {
     return Fluttertoast.showToast(msg: "Rimosso dai Preferiti");
   }
 
+// visualizza ingredienti cocktail
   getIngredienti() {
     for (var ingrediente in widget.document["ingredienti"]) {
       ingredientiList.add(ingrediente);
@@ -409,6 +420,7 @@ class _VisualizzaRicettaState extends State<VisualizzaRicetta> {
     return ingredientiList;
   }
 
+// visualizza immagine cocktail (se caricata)
   Future<String> getImmagine() async {
     urlImmagine = await FirebaseStorage.instance
         .ref()
@@ -418,6 +430,7 @@ class _VisualizzaRicettaState extends State<VisualizzaRicetta> {
     return urlImmagine;
   }
 
+// per non duplicare la lista degli ingredienti
   emptyIngredienti() {
     ingredientiList = [];
   }

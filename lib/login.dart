@@ -12,7 +12,10 @@ class Login extends StatefulWidget {
   _LoginState createState() => _LoginState();
 }
 
+// login
 class _LoginState extends State<Login> {
+
+  // funzione login
   static Future<User?> login(
       {required String email,
       required String password,
@@ -25,6 +28,7 @@ class _LoginState extends State<Login> {
       UserCredential userCredential = await auth.signInWithEmailAndPassword(
           email: email, password: password);
       user = userCredential.user;
+      // errori nell'inserimento
     } on FirebaseAuthException catch (e) {
       if (e.code == "user-not-found") {
         Fluttertoast.showToast(msg: "Non esiste un utente con questa email");

@@ -14,7 +14,9 @@ class Register extends StatefulWidget {
   _RegisterState createState() => _RegisterState();
 }
 
+// registrazione utente
 class _RegisterState extends State<Register> {
+  // funzione registrazione
   static Future<User?> register(
       {required String username,
       required String email,
@@ -31,6 +33,7 @@ class _RegisterState extends State<Register> {
       UserCredential userCredential = await auth.createUserWithEmailAndPassword(
           email: email, password: password);
       user = userCredential.user;
+      // errori
     } on FirebaseException catch (e) {
       if (e.code == "email-already-in-use") {
         Fluttertoast.showToast(msg: "Esiste già un utente con questa email");
@@ -71,6 +74,7 @@ class _RegisterState extends State<Register> {
     }
     newUser["username"] = username;
 
+// registra utente
     await FirebaseFirestore.instance
         .collection("users")
         .doc(email)

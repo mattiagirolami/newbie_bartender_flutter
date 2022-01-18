@@ -57,6 +57,7 @@ class _AggiungiCocktailState extends State<AggiungiCocktail> {
         child: Text(item,
             style: TextStyle(fontWeight: FontWeight.normal, fontSize: 20)));
 
+// spinner della tipologia
     final spinnerTipologia = Container(
       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       decoration: BoxDecoration(
@@ -78,6 +79,7 @@ class _AggiungiCocktailState extends State<AggiungiCocktail> {
       ),
     );
 
+    // spinner della difficoltà
     final spinnerDifficolta = Container(
       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       decoration: BoxDecoration(
@@ -235,8 +237,8 @@ class _AggiungiCocktailState extends State<AggiungiCocktail> {
         });
   }
 
+// aggiunge i cocktail con i campi inseriti dall'utente
   aggiungiCocktail(String titolo, String descrizione) async {
-
     if (titolo == "") {
       Fluttertoast.showToast(msg: "Inserire il nome del cocktail");
       return;
@@ -262,6 +264,7 @@ class _AggiungiCocktailState extends State<AggiungiCocktail> {
 
     Map<String, dynamic> cocktail = HashMap();
 
+    // mappa il cocktail
     cocktail["id"] = getRandom(20);
     cocktail["tipoRicetta"] = tipologia!.toLowerCase();
     cocktail["difficoltà"] = difficolta;
@@ -273,16 +276,16 @@ class _AggiungiCocktailState extends State<AggiungiCocktail> {
     cocktail["titolo"] = titolo;
     cocktail["ingredienti"] = listaIngredienti;
 
+// aggiunge il cocktail
     await FirebaseFirestore.instance.collection("cocktail").doc().set(cocktail);
 
-    if(imageFile != null)  {
-
-    await FirebaseStorage.instance
-        .ref()
-        .child(
-            "${cocktail["tipoRicetta"].toString()}/${cocktail["id"].toString()}.jpg")
-        .putFile(imageFile!);
-
+// se è inserita la foto aggiunge il file allo Storage
+    if (imageFile != null) {
+      await FirebaseStorage.instance
+          .ref()
+          .child(
+              "${cocktail["tipoRicetta"].toString()}/${cocktail["id"].toString()}.jpg")
+          .putFile(imageFile!);
     }
 
     Fluttertoast.showToast(msg: "Ricetta salvata correttamente");
@@ -300,6 +303,7 @@ class _AggiungiCocktailState extends State<AggiungiCocktail> {
     }
   }
 
+// genera una stringa random che funge da ID del documento in Firebase
   String getRandom(int length) {
     const ch = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     Random r = Random();
@@ -307,6 +311,7 @@ class _AggiungiCocktailState extends State<AggiungiCocktail> {
         Iterable.generate(length, (_) => ch.codeUnitAt(r.nextInt(ch.length))));
   }
 
+// carica la foto all'interno della schermata
   caricaFoto(ImageSource source) async {
     final pickedFile = await picker.getImage(source: source);
 

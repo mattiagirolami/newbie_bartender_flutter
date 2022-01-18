@@ -10,13 +10,17 @@ class ModificaPassword extends StatefulWidget {
   _ModificaPasswordState createState() => _ModificaPasswordState();
 }
 
+// modifica password nel profilo
 class _ModificaPasswordState extends State<ModificaPassword> {
+
+  // funzione modifica password
   static Future updatePassword(
       {required String nuovaPassword, required BuildContext context}) async {
     User? auth = FirebaseAuth.instance.currentUser;
 
     try {
       await auth!.updatePassword(nuovaPassword);
+      // errori
     } on FirebaseException catch (e) {
       if (e.toString().contains("recent authentication")) {
         Fluttertoast.showToast(

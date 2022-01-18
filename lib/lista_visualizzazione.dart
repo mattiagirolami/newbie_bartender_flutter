@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:newbie_bartender/visualizza_ricetta.dart';
 
+// lista dei cocktail, con barra di ricerca per ingredienti
 Widget listaVisualizzazione(String? tipoRicetta, String? ingrediente) {
   return StreamBuilder<QuerySnapshot>(
       stream: (ingrediente != "" && ingrediente != null)

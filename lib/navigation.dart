@@ -13,6 +13,7 @@ class Navigation extends StatefulWidget {
   _NavigationState createState() => _NavigationState();
 }
 
+// barra di navigazione
 class _NavigationState extends State<Navigation> {
   int selectedIndex = 0;
   List<Widget> widgetOptions = <Widget>[

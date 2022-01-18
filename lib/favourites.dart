@@ -10,11 +10,13 @@ class Favourites extends StatefulWidget {
   _FavouritesState createState() => _FavouritesState();
 }
 
+// lista dei preferiti
 class _FavouritesState extends State<Favourites> {
   User auth = FirebaseAuth.instance.currentUser!;
 
   @override
   Widget build(BuildContext context) {
+
     Widget lista_preferiti() {
       return StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance
